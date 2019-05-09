@@ -7,9 +7,10 @@ import (
 // ProviderModel Interface for Calling Provider Model
 type ProviderModel interface {
 	GetProviderID() ([]*Provider, error)
-	GetMKMReport(startDate,endDate string) ([]*ReportMKM,error)
-	GetSalesData(startDate,endDate string) ([]*Order,error)
-	GetProviderConfig(providerID,productID string)(*Config,error)
+	GetMKMReport(startDate, endDate string) ([]*ReportMKM, error)
+	GetSalesData(startDate, endDate string) ([]*Order, error)
+	GetProviderConfig(providerID, productID string) (*Config, error)
+	InsertToMatch(match []*Match) error
 }
 
 // DB Structure for embedding SQL

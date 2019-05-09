@@ -19,16 +19,16 @@ type Env struct {
 	db models.ProviderModel
 }
 
-var notRecon = make([]*NotMatch, 0)
-var recon = make([]*Match, 0)
+var notRecon = make([]*models.NotMatch, 0)
+var recon = make([]*models.Match, 0)
 
 const (
 	providerID     = "1"
 	productID      = "1"
-	providerSource = "MKM"
-	pzSource       = "PZ"
-	notMatchStatus = "Not Match"
-	matchStatus    = "Match"
+	providerSource = "1"
+	pzSource       = "2"
+	notMatchStatus = -1
+	matchStatus    = 1
 )
 
 func main() {
@@ -178,19 +178,18 @@ func main() {
 			}
 		}
 	}
-	stmt := "INSERT INTO REPORT_MATCH (	ProviderID, ProductID, Source,KeyID,Status,DateID,IsUsed,CreatedAt,CreatedBy,UpdatedAt,	UpdatedBy ) VALUES ($1::models.NotMatch[])"
-	// for key, value := range notRecon {
-	// 	stmt := `INSERT INTO REPORT_MATCH (	ProviderID, ProductID, Source,KeyID,Status,DateID,IsUsed,CreatedAt,CreatedBy,UpdatedAt,	UpdatedBy ) VALUES ($1::value $2::ingredient[])`
-	// 	log.Println(key, value.KeyID, value.Source)
-	// }
 
-	log.Println(len(notRecon), totalNotRecon)
+	starts := time.Now()
+
+	errors := env.db.InsertToMatch(recon)
+	elapsed := time.Since(starts)
+	log.Printf("Inserting took %s second", elapsed)
 }
 
 // InsertRecon Insert data into corresponding map
-func (db *DB) InsertRecon(status bool, providerID, productID, source, pzID, bsID, match string, dateID int, from int) {
+func InsertRecon(status bool, providerID, productID, source, pzID, bsID string, match, dateID, from int) {
 	if status == false {
-		data := new(NotMatch)
+		data := new(models.NotMatch)
 		data.ProviderID = providerID
 		data.ProductID = productID
 		data.Source = source
@@ -199,7 +198,7 @@ func (db *DB) InsertRecon(status bool, providerID, productID, source, pzID, bsID
 		data.DateID = dateID
 		notRecon = append(notRecon, data)
 	} else if status == true {
-		data := new(Match)
+		data := new(models.Match)
 		data.ProviderID = providerID
 		data.ProductID = productID
 		data.Source = source
