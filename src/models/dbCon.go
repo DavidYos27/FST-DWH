@@ -4,18 +4,14 @@ import (
 	"database/sql"
 )
 
-// ProviderModel Interface for Calling Provider Model
-type ProviderModel interface {
-	GetProviderID() ([]*Provider, error)
-	GetMKMReport(startDate, endDate string) ([]*ReportMKM, error)
-	GetSalesData(startDate, endDate string) ([]*Order, error)
-	GetProviderConfig(providerID, productID string) (*Config, error)
-	InsertToMatch(match []*Match) error
-}
+// // ProviderModel Interface for Calling Provider Model
+// type ProviderModel interface {
+// 	GetProviderID() ([]*Provider, error)
+// }
 
 // DB Structure for embedding SQL
 type DB struct {
-	*sql.DB
+	SQL *sql.DB
 }
 
 // NewDB Create New Connection for DB
